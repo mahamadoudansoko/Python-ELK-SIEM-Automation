@@ -1,3 +1,4 @@
+```mermaid
 graph TD
     %% Define Styles
     classDef capture fill:#e1f5fe,stroke:#01579b,stroke-width:2px;
@@ -31,4 +32,4 @@ graph TD
     SIEM -->|Alerts| SOAR
     SOAR -->|1. Create Ticket| Jira[Jira]
     SOAR -->|2. Block IP/User| Firewall[Firewall/AD]
-    
+```
