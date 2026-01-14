@@ -1,5 +1,4 @@
-```
-mermaid
+```mermaid
 graph TD
     %% Define Styles - Modern Dark Theme
     classDef input fill:#2E7D32,stroke:#1B5E20,stroke-width:2px,color:white;  %% Green
