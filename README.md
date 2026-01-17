@@ -1,41 +1,64 @@
+
 ```mermaid
 graph TD
-    %% Define Styles - Modern Dark Theme
-    classDef input fill:#2E7D32,stroke:#1B5E20,stroke-width:2px,color:white;  %% Green
-    classDef core fill:#F57F17,stroke:#E65100,stroke-width:2px,color:white;   %% Orange
-    classDef action fill:#C62828,stroke:#B71C1c,stroke-width:2px,color:white;  %% Red
-    classDef container fill:#263238,stroke:#546E7A,stroke-width:2px,stroke-dasharray: 5 5,color:white;
+    %% Define Styles
+    classDef container fill:#2496ED,stroke:#103F61,stroke-width:2px,color:white;
+    classDef vm fill:#E95420,stroke:#333,stroke-width:2px,color:white;
+    classDef cloud fill:#F22F46,stroke:#780E1B,stroke-width:2px,color:white;
+    classDef file fill:#FFD43B,stroke:#333,stroke-width:1px,color:black;
 
-    subgraph XDR ["XDR Ecosystem (Unified View)"]
-        direction TB
+    subgraph Host ["Laptop (Windows Host)"]
         
-        subgraph Collection ["🟢 Data Collection Layer"]
-            direction LR
-            EDR[/"EDR (Elastic Defend)"<br>Endpoint Process/\]:::input
-            NDR[/"NDR (Packetbeat)"<br>Network Traffic/\]:::input
-            Logs[/"Syslog/Filebeat"<br>System Logs/\]:::input
+        subgraph Docker_Engine ["Docker Engine"]
+            direction TB
+            Container["🐳 elk-ids-bot<br>(Python Container)"]:::container
+            EnvFile["📄 ELK.env<br>(Secrets Injection)"]:::file
+            
+            EnvFile -.->|Mounts to /app| Container
         end
-
-        subgraph Analysis ["🟠 Intelligence Layer"]
-            SIEM(("SIEM (Elasticsearch)"<br>Correlation & Detection)):::core
+        
+        subgraph VMware ["Secure Virtual Network (NAT)"]
+            ES(("Elasticsearch Node<br>192.168.106.150")):::vm
         end
     end
 
-    subgraph Response ["🔴 Action Layer (SOAR)"]
-        SOAR{{"SOAR (TheHive)"<br>Orchestration}}:::action
-        Jira[Jira Ticket]:::action
-        Block[Block Firewall]:::action
+    subgraph Internet ["Cloud Services"]
+        Twilio("Twilio API<br>(SMS Gateway)"):::cloud
+        User(("📱 Admin Phone")):::cloud
     end
 
-    %% Connections
-    EDR ==>|Process Data| SIEM
-    NDR ==>|Packet Data| SIEM
-    Logs ==>|Auth Logs| SIEM
+    %% Data Flow
+    Container == "1. Secure Query (HTTPS)" ==> ES
+    ES -.->|2. Return Logs| Container
     
-    SIEM ==>|High Severity Alert| SOAR
-    SOAR -.->|1. Triage| Jira
-    SOAR -.->|2. Remediate| Block
+    Container -- "3. Trigger Alert" --> Twilio
+    Twilio -- "4. Send SMS" --> User
 
-    %% Background Styling
-    class XDR container
+    %% Styling for the Script logic inside container
+    note1[Logic: Check 4625 Events] --- Container
 ```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
